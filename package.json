@@ -13,11 +13,14 @@
   "devDependencies": {
     "@types/express": "^4.17.14",
     "nodemon": "^2.0.20",
+    "sequelize-cli": "^6.5.2",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.4"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.25.5"
   }
 }
