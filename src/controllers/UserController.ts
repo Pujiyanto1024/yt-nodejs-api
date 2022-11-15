@@ -25,4 +25,53 @@ const Register = async (req: Request, res: Response): Promise<Response> => {
 	}
 };
 
-export default { Register };
+const UserLogin = async (req: Request, res: Response): Promise<Response> => {
+	try {
+		const { email, password } = req.body;
+		const user = await User.findOne({
+			where: {
+				email: email
+			}
+		});
+
+		if (!user) {
+			return res.status(401).send(Helper.ResponseData(401, "Unauthorized", null, null));
+		}
+
+		const matched = await PasswordHelper.PasswordCompare(password, user.password);
+		if (!matched) {
+			return res.status(401).send(Helper.ResponseData(401, "Unauthorized", null, null));
+		}
+
+		const dataUser = {
+			name: user.name,
+			email: user.email,
+			roleId: user.roleId,
+			verified: user.verified,
+			active: user.active
+		};
+		const token = Helper.GenerateToken(dataUser);
+		const refreshToken = Helper.GenerateRefreshToken(dataUser);
+
+		user.accessToken = refreshToken;
+		await user.save();
+		res.cookie('refreshToken', refreshToken, {
+			httpOnly: true,
+			maxAge: 24 * 60 * 60 * 1000
+		});
+
+		const responseUser = {
+			name: user.name,
+			email: user.email,
+			roleId: user.roleId,
+			verified: user.verified,
+			active: user.active,
+			token: token
+		}
+		return res.status(200).send(Helper.ResponseData(200, "OK", null, responseUser));
+	} catch (error) {
+		return res.status(500).send(Helper.ResponseData(500, "", error, null));
+	}
+}
+
+export default { Register, UserLogin };
