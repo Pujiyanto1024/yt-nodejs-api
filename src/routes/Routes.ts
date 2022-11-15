@@ -18,5 +18,6 @@ router.get("/role/:id", RoleController.GetRoleById);
 // User Routing
 router.post("/user/signup", UserValidation.RegisterValidation, UserController.Register);
 router.post("/user/login", UserController.UserLogin);
+router.get("/user/refresh-token", UserController.RefreshToken);
 
 export default router;

@@ -10,6 +10,9 @@ const Authenticated = (req: Request, res: Response, next: NextFunction) => {
 			return res.status(401).send(Helper.ResponseData(401, "Unautorized", null, null));
 		}
 		const result = Helper.ExtractToken(token!);
+		if (!result) {
+			return res.status(401).send(Helper.ResponseData(401, "Unautorized", null, null));
+		}
 		next();
 
 	} catch (err:any) {

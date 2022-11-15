@@ -72,6 +72,44 @@ const UserLogin = async (req: Request, res: Response): Promise<Response> => {
 	} catch (error) {
 		return res.status(500).send(Helper.ResponseData(500, "", error, null));
 	}
+};
+
+const RefreshToken = async (req: Request, res: Response): Promise<Response> => {
+	try {
+		const refreshToken = req.cookies?.refreshToken;
+
+		if (!refreshToken) {
+			return res.status(401).send(Helper.ResponseData(401, "Unauthorized", null, null));
+		}
+
+		const decodedUser = Helper.ExtractRefreshToken(refreshToken);
+		console.log(decodedUser);
+		if (!decodedUser) {
+			return res.status(401).send(Helper.ResponseData(401, "Unauthorized", null, null));
+		}
+
+		const token = Helper.GenerateToken({
+			name: decodedUser.name,
+			email: decodedUser.email,
+			roleId: decodedUser.roleId,
+			verified: decodedUser.verified,
+			active: decodedUser.active
+		});
+
+		const resultUser = {
+			name: decodedUser.name,
+			email: decodedUser.email,
+			roleId: decodedUser.roleId,
+			verified: decodedUser.verified,
+			active: decodedUser.active,
+			token: token
+		}
+
+		return res.status(200).send(Helper.ResponseData(200, "OK", null, resultUser));
+
+	} catch (error) {
+		return res.status(500).send(Helper.ResponseData(500, "", error, null));
+	}
 }
 
-export default { Register, UserLogin };
+export default { Register, UserLogin, RefreshToken };
