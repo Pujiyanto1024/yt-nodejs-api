@@ -120,7 +120,10 @@ const UserDetail = async (req: Request, res: Response): Promise<Response> => {
 			where: {
 				email: email
 			},
-			include: { model: Role, attributes: ["id", "roleName"] }
+			include: {
+				model: Role,
+				attributes: ["id", "roleName"]
+			}
 		});
 
 		if (!user) {
