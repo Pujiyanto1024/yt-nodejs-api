@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
+import { Op } from "sequelize";
 import Role from "../db/models/Role";
 import User from "../db/models/User";
+import RoleMenuAccess from "../db/models/RoleMenuAccess";
+import MasterMenu from "../db/models/MasterMenu";
+import Submenu from "../db/models/Submenu";
 
 import Helper from "../helpers/Helper";
 import PasswordHelper from "../helpers/PasswordHelper";
@@ -61,13 +65,42 @@ const UserLogin = async (req: Request, res: Response): Promise<Response> => {
 			maxAge: 24 * 60 * 60 * 1000
 		});
 
+		const roleAccess = await RoleMenuAccess.findAll({
+			where: {
+				roleId: user.roleId,
+				active: true
+			}
+		});
+
+		const listSubmenuId = roleAccess.map((item) => {
+			return item.submenuId
+		});
+
+		const menuAccess = await MasterMenu.findAll({
+			where: {
+				active: true
+			},
+			order: [
+				['ordering', 'ASC'],
+				[Submenu, 'ordering', 'ASC']
+			],
+			include: {
+				model: Submenu,
+				where: {
+					id: { [Op.in]: listSubmenuId }
+				}
+			}
+		});
+
+
 		const responseUser = {
 			name: user.name,
 			email: user.email,
 			roleId: user.roleId,
 			verified: user.verified,
 			active: user.active,
-			token: token
+			token: token,
+			menuAccess: menuAccess
 		}
 		return res.status(200).send(Helper.ResponseData(200, "OK", null, responseUser));
 	} catch (error) {
