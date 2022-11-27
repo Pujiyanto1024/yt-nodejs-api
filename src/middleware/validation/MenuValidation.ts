@@ -13,7 +13,7 @@ const CreateMenuValidation = (req: Request, res: Response, next: NextFunction) =
 		const rules: Validator.Rules = {
 			"name": "required|string|max:50",
 			"icon": "required|string",
-			"oradering": "required|number",
+			"ordering": "required|numeric",
 		};
 
 		const validate = new Validator(data, rules);
@@ -37,11 +37,11 @@ const CreateSubmenuValidation = async(req: Request, res: Response, next: NextFun
 
 		const rules: Validator.Rules = {
 			"name": "required|string|max:50",
-			"masterMenuId": "required|number",
+			"masterMenuId": "required|numeric",
 			"url": "required|string",
 			"title": "required|string|max:50",
 			"icon": "required|string",
-			"oradering": "required|number",
+			"ordering": "required|numeric",
 			"isTargetSelf": "required|boolean"
 		};
 

@@ -27,7 +27,7 @@ router.get("/user/logout", Authorization.Authenticated, UserController.UserLogou
 
 // Master Menu Routing
 router.post("/menu", MenuValidation.CreateMenuValidation, Authorization.Authenticated, Authorization.AdminRole, MasterMenuController.CreateMenu);
-router.get("/menu", Authorization.Authenticated, Authorization.AdminRole, MasterMenuController.GetDetailMenu);
+router.get("/menu", Authorization.Authenticated, Authorization.AdminRole, MasterMenuController.GetListMenu);
 router.get("/menu/get/all", Authorization.Authenticated, Authorization.SuperUser, MasterMenuController.GetAllMenu);
 router.get("/menu/:id", Authorization.Authenticated, Authorization.AdminRole, MasterMenuController.GetDetailMenu);
 router.patch("/menu/:id", MenuValidation.CreateMenuValidation, Authorization.Authenticated, Authorization.AdminRole, MasterMenuController.UpdateMenu);
@@ -37,10 +37,10 @@ router.delete("/menu/permanent/:id", Authorization.Authenticated, Authorization.
 // Submenu routing
 router.post("/sub-menu", MenuValidation.CreateSubmenuValidation, Authorization.Authenticated, Authorization.AdminRole, SubmenuController.CreateSubmenu);
 router.get("/sub-menu", Authorization.Authenticated, Authorization.AdminRole, SubmenuController.GetListSubmenu);
-router.get("/sub-menu/get/all", Authorization.Authenticated, Authorization.AdminRole, SubmenuController.GetAllSubmenu);
+router.get("/sub-menu/get/all", Authorization.Authenticated, Authorization.SuperUser, SubmenuController.GetAllSubmenu);
 router.get("/sub-menu/:id", Authorization.Authenticated, Authorization.AdminRole, SubmenuController.GetDetailSubmenu);
 router.patch("/sub-menu/:id", MenuValidation.CreateSubmenuValidation, Authorization.Authenticated, Authorization.AdminRole, SubmenuController.UpdateSubmenu);
 router.delete("/sub-menu/:id", Authorization.Authenticated, Authorization.AdminRole, SubmenuController.SoftDelete);
-router.delete("/sub-menu/permanent/:id", Authorization.Authenticated, Authorization.AdminRole, SubmenuController.DeletePermanent);
+router.delete("/sub-menu/permanent/:id", Authorization.Authenticated, Authorization.SuperUser, SubmenuController.DeletePermanent);
 
 export default router;

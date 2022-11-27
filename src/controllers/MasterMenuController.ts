@@ -108,7 +108,7 @@ const SoftDeleteMenu = async(req:Request, res:Response):Promise<Response> => {
 		}
 
 		menu.active = false;
-
+		await menu.save();
 		return res.status(200).send(Helper.ResponseData(200, "Removed", null, null));
 	} catch (error:any) {
 		return res.status(500).send(Helper.ResponseData(500, "", error, null));
