@@ -2,6 +2,8 @@ import Validator from "validatorjs";
 import { Request, Response, NextFunction } from "express";
 import Helpers from "../../helpers/Helper";
 import MasterMenu from "../../db/models/MasterMenu";
+import Submenu from "../../db/models/Submenu";
+import Role from "../../db/models/Role";
 
 const CreateMenuValidation = (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -75,4 +77,63 @@ const CreateSubmenuValidation = async(req: Request, res: Response, next: NextFun
 	}
 }
 
-export default { CreateMenuValidation, CreateSubmenuValidation }
+const CreateRoleMenuAccess = async(req: Request, res: Response, next: NextFunction) => {
+	try {
+		const { roleId, submenuId } = req.body;
+		const data = {
+			roleId, submenuId
+		};
+
+		const rules: Validator.Rules = {
+			"roleId": "required|numeric",
+			"submenuId": "required|numeric",
+		};
+
+		const validate = new Validator(data, rules);
+
+		if (validate.fails()) {
+			return res.status(400).send(Helpers.ResponseData(400, "Bad Request", validate.errors, null));
+		}
+
+		const role = await Role.findOne({
+			where: {
+				id: roleId,
+				active: true
+			}
+		});
+		if (!role) {
+			const errorData = {
+				errors: {
+					roleId: [
+						"Role not found"
+					]
+				}
+			};
+			return res.status(400).send(Helpers.ResponseData(400, "Bad Request", errorData, null));
+		}
+
+		const submenu = await Submenu.findOne({
+			where: {
+				id: submenuId,
+				active: true
+			}
+		});
+
+		if (!submenu) {
+			const errorData = {
+				errors: {
+					submenuId: [
+						"Submenu not found"
+					]
+				}
+			};
+			return res.status(400).send(Helpers.ResponseData(400, "Bad Request", errorData, null));
+		}
+
+		next();
+	} catch (error:any) {
+		return res.status(500).send(Helpers.ResponseData(500, "", error, null));
+	}
+}
+
+export default { CreateMenuValidation, CreateSubmenuValidation, CreateRoleMenuAccess }

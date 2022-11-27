@@ -4,6 +4,7 @@ import RoleController from "../controllers/RoleController";
 import UserController from "../controllers/UserController";
 import MasterMenuController from "../controllers/MasterMenuController";
 import SubmenuController from "../controllers/SubmenuController";
+import RoleMenuAccessController from "../controllers/RoleMenuAccessController";
 
 import UserValidation from "../middleware/validation/UserValidation";
 import Authorization from "../middleware/Authorization";
@@ -42,5 +43,13 @@ router.get("/sub-menu/:id", Authorization.Authenticated, Authorization.AdminRole
 router.patch("/sub-menu/:id", MenuValidation.CreateSubmenuValidation, Authorization.Authenticated, Authorization.AdminRole, SubmenuController.UpdateSubmenu);
 router.delete("/sub-menu/:id", Authorization.Authenticated, Authorization.AdminRole, SubmenuController.SoftDelete);
 router.delete("/sub-menu/permanent/:id", Authorization.Authenticated, Authorization.SuperUser, SubmenuController.DeletePermanent);
+
+// Role Menu Access
+router.post("/role-menu-access", MenuValidation.CreateRoleMenuAccess , Authorization.Authenticated, Authorization.SuperUser, RoleMenuAccessController.CreateAccess);
+router.get("/role-menu-access", Authorization.Authenticated, Authorization.SuperUser, RoleMenuAccessController.GetList);
+router.get("/role-menu-access/get/all", Authorization.Authenticated, Authorization.SuperUser, RoleMenuAccessController.GetAll);
+router.get("/role-menu-access/:id", Authorization.Authenticated, Authorization.SuperUser, RoleMenuAccessController.GetDetail);
+router.patch("/role-menu-access/:id", MenuValidation.CreateRoleMenuAccess, Authorization.Authenticated, Authorization.SuperUser, RoleMenuAccessController.UpdateAccess);
+router.delete("/role-menu-access/:id", Authorization.Authenticated, Authorization.SuperUser, RoleMenuAccessController.SoftDelete);
 
 export default router;
