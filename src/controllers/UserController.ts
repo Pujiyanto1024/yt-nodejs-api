@@ -11,7 +11,7 @@ import PasswordHelper from "../helpers/PasswordHelper";
 
 const Register = async (req: Request, res: Response): Promise<Response> => {
 	try {
-		const { name, email, password, roleId , confirmPassword } = req.body;
+		const { name, email, password, confirmPassword } = req.body;
 
 		const hashed = await PasswordHelper.PasswordHashing(password);
 
@@ -21,7 +21,7 @@ const Register = async (req: Request, res: Response): Promise<Response> => {
 			password: hashed,
 			active: true,
 			verified: true,
-			roleId: roleId
+			roleId: 3
 		});
 
 		return res.status(201).send(Helper.ResponseData(201, "Created", null, user));
