@@ -11,7 +11,10 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+	credentials: true,
+	origin: true
+}));
 
 app.get("/", (req: Request, res: Response) => {
 	return res.status(200).send({

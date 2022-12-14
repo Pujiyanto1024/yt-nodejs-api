@@ -49,6 +49,7 @@ const UserLogin = async (req: Request, res: Response): Promise<Response> => {
 		}
 
 		const dataUser = {
+			id: user.id,
 			name: user.name,
 			email: user.email,
 			roleId: user.roleId,
@@ -94,6 +95,7 @@ const UserLogin = async (req: Request, res: Response): Promise<Response> => {
 
 
 		const responseUser = {
+			id: user.id,
 			name: user.name,
 			email: user.email,
 			roleId: user.roleId,
